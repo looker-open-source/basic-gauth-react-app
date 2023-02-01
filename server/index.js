@@ -2,8 +2,9 @@ const express = require('express')
 const app = express()
 const port = 5000
 
-app.get('/blah', (req, res) => {
-  res.send('Hello World!')
+app.get('/exampleendpoint', (req, res) => {
+  // Return a json response
+  res.json({exampleString: 'Hello World!'})
 })
 
 app.listen(port, () => {

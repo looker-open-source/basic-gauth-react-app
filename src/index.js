@@ -3,13 +3,17 @@ import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider,
-} from "react-router-dom";
+  useNavigate
+} from 'react-router-dom';
 import './index.css';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { Home } from './home'
 
-const GoogleUserContext = React.createContext();
+export const GoogleUserContext = React.createContext()
 
-function Welcome(props) {
+const Welcome = (props) => {
+  const [_, setGoogleUserContext] = React.useContext(GoogleUserContext)
+  const navigate = useNavigate()
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const userInfo = await fetch(
@@ -17,48 +21,46 @@ function Welcome(props) {
         { headers: { Authorization: 'Bearer ' + tokenResponse.access_token } },
       );
       const response = await userInfo.json()
-      console.log(response);
+      setGoogleUserContext(response.sub)
+      navigate('/home')
+
     },
     onError: errorResponse => console.log(errorResponse),
   });
   return (
     <button onClick={() => login()}>
-      Sign in with Google 🚀{' '}
+      Sign in with Google 🚀
     </button>
   )
 }
 
-function Home(props) {
-  return (
-    <div>
-    home {React.useContext(GoogleUserContext)}
-    </div>
-  );
-}
-
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Welcome/>,
   },
   {
-    path: "/home",
+    path: '/home',
     element: <Home/>,
   },
 ]);
 
 const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
 
-const root = ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <GoogleUserContext.Provider value="abcde12345">
-      <GoogleOAuthProvider clientId={googleClientId}>
-        <RouterProvider router={router} />
-      </GoogleOAuthProvider>
-    </GoogleUserContext.Provider>
-  </React.StrictMode>
-);
+function App(props) {
+  const [googleUserContext, setGoogleUserContext] = React.useState('DEFAULT_GOOGLE_USER_ID');
 
-fetch('/blah')
-.then((response) => response.json())
-.then((data) => alert(data));
+  return ( 
+    <React.StrictMode>
+      <GoogleUserContext.Provider value={[googleUserContext, setGoogleUserContext]}>
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <RouterProvider router={router} />
+        </GoogleOAuthProvider>
+      </GoogleUserContext.Provider>
+    </React.StrictMode>
+  )
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root')).render(
+  <App />
+);
