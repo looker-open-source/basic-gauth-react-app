@@ -1,6 +1,5 @@
 import React from 'react'
 import { GoogleUserConsumer } from './context.js'
-import { LookerEmbedSDK } from '@looker/embed-sdk'
 
 export class Home extends React.Component {
   constructor (props) {
