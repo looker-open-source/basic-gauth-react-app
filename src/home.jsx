@@ -1,19 +1,23 @@
-import React from 'react';
-import { GoogleUserContext } from '.';
+import React from 'react'
+import { GoogleUserContext } from '.'
 
 // This page is on https://embed.demo.com:3000
-export const Home = (props) => {
-    // This is your user's ID in the app.
-    const [googleUserId] = React.useContext(GoogleUserContext)
+export class Home extends React.Component {
+    constructor (props) {
+      super(props)
+      this.embedDivRef = React.createRef()
 
-    // Example fetch 
-    fetch('exampleendpoint')
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+       // This is your user's ID in the app.
+      this.googleUserId = React.useContext(GoogleUserContext)
 
-    return (
-      <div>
-        EMBED HERE
-      </div>
-    );
+      // Example fetch 
+      fetch('exampleendpoint')
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+    }
+    render () {
+      return (
+        <div ref={this.embedDivRef}/>
+      )
+    }
 }
