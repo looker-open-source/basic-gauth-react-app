@@ -7,8 +7,8 @@ import {
 } from 'react-router-dom'
 import './index.css'
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
-import { HomePage } from './home'
-import { GoogleUserContext } from './context'
+import { HomePage } from './home.jsx'
+import { GoogleUserContext } from './context.js'
 
 const Welcome = (props) => {
   const { setGoogleUserId } = React.useContext(GoogleUserContext)

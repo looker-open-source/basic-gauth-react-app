@@ -1,14 +1,15 @@
 import React from 'react'
-import { GoogleUserConsumer } from './context'
+import { GoogleUserConsumer } from './context.js'
+import { LookerEmbedSDK } from '@looker/embed-sdk'
 
 export class Home extends React.Component {
   constructor (props) {
     super(props)
     this.embedDivRef = React.createRef()
-    console.log('constructed')
   }
 
-  // ONLY ADD CODE TO THIS FUNCTION
+  // This function is all you need to care about
+  // ADD EMBEDDING CODE TO THIS FUNCTION ONLY
   componentDidMount() {
     // This page is on https://embed.demo.com:3000/home
 
@@ -20,7 +21,6 @@ export class Home extends React.Component {
     node.id = "embedDivId"
 
     // ADD CODE HERE
-
   }
 
   render () {
