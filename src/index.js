@@ -46,7 +46,6 @@ const router = createBrowserRouter([
 
 const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -57,8 +56,6 @@ class App extends React.Component {
       }));
     };
 
-    // State also contains the updater function so it will
-    // be passed down into the context provider
     this.state = {
       googleUserId: "DEFAULT_GOOGLE_USER_ID",
       setGoogleUserId: this.setGoogleUserId,
@@ -67,13 +64,11 @@ class App extends React.Component {
 
   render () {
     return ( 
-      <React.StrictMode>
-        <GoogleUserContext.Provider value={this.state}>
-          <GoogleOAuthProvider clientId={googleClientId}>
-            <RouterProvider router={router} />
-          </GoogleOAuthProvider>
-        </GoogleUserContext.Provider>
-      </React.StrictMode>
+      <GoogleUserContext.Provider value={this.state}>
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <RouterProvider router={router} />
+        </GoogleOAuthProvider>
+      </GoogleUserContext.Provider>
     )
   }
 }
