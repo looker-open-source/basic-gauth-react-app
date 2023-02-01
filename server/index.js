@@ -1,4 +1,7 @@
+import { LookerNodeSDK } from '@looker/sdk-node'
 import express from 'express';
+
+const sdk = LookerNodeSDK.init40()
 
 const app = express()
 const port = 5000
@@ -12,7 +15,13 @@ app.get('/exampleendpoint', (req, res) => {
 })
 
 // UPDATE THIS ENDPOINT ONLY
-app.get('/endpoint', (req, res) => {
+app.get('/auth', (req, res) => {
+  sdk.ok(sdk.create_sso_embed_url({
+    target_url: "https://hack.looker.com" + req.query.src,
+    external_user_id: req.query.googleuserid,
+    models: ['bitly'],
+    permissions: ['access_data', 'see_user_dashboards', 'see_lookml_dashboards']
+  })).then(({ url }) => res.json({ url }))
 })
 
 app.listen(port, () => {

@@ -5,6 +5,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@looker/embed-sdk": "^1.8.0",
+    "@looker/sdk": "^22.20.1",
+    "@looker/sdk-node": "^22.20.1",
+    "@looker/sdk-rtl": "^21.5.0",
     "@react-oauth/google": "^0.6.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

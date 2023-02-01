@@ -1,5 +1,6 @@
 import React from 'react'
 import { GoogleUserConsumer } from './context.js'
+import { LookerEmbedSDK } from '@looker/embed-sdk'
 
 export class Home extends React.Component {
   constructor (props) {
@@ -19,7 +20,20 @@ export class Home extends React.Component {
     const node = this.embedDivRef.current 
     node.id = "embedDivId"
 
-    // ADD CODE HERE
+    LookerEmbedSDK.init('https://hack.looker.com', {
+      url: '/auth',
+      params: [{ name: 'googleuserid', value: this.props.googleUserId }],
+    })
+
+    LookerEmbedSDK.createDashboardWithId(26)
+      .appendTo('embedDivId')
+      .on('dashboard:run:start', () => console.log('start'))
+      .on('dashboard:run:complete', () => console.log('complete'))
+      .build()
+      .connect()
+      .catch((error) => {
+        console.error('An unexpected error occurred', error)
+      })
   }
 
   render () {
