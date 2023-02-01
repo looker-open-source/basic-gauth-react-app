@@ -1,32 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
   RouterProvider,
   useNavigate
-} from 'react-router-dom';
-import './index.css';
-import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
-import { Home } from './home'
-
-export const GoogleUserContext = React.createContext()
+} from 'react-router-dom'
+import './index.css'
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
+import { HomePage } from './home'
+import { GoogleUserContext } from './context'
 
 const Welcome = (props) => {
-  const [_, setGoogleUserContext] = React.useContext(GoogleUserContext)
+  const { setGoogleUserId } = React.useContext(GoogleUserContext)
   const navigate = useNavigate()
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const userInfo = await fetch(
         'https://www.googleapis.com/oauth2/v3/userinfo',
         { headers: { Authorization: 'Bearer ' + tokenResponse.access_token } },
-      );
+      )
       const response = await userInfo.json()
-      setGoogleUserContext(response.sub)
+      setGoogleUserId(response.sub)
       navigate('/home')
 
     },
     onError: errorResponse => console.log(errorResponse),
-  });
+  })
   return (
     <button onClick={() => login()}>
       Sign in with Google 🚀
@@ -41,26 +40,44 @@ const router = createBrowserRouter([
   },
   {
     path: '/home',
-    element: <Home/>,
+    element: <HomePage/>,
   },
-]);
+])
 
-const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
+const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
 
-function App(props) {
-  const [googleUserContext, setGoogleUserContext] = React.useState('DEFAULT_GOOGLE_USER_ID');
 
-  return ( 
-    <React.StrictMode>
-      <GoogleUserContext.Provider value={[googleUserContext, setGoogleUserContext]}>
-        <GoogleOAuthProvider clientId={googleClientId}>
-          <RouterProvider router={router} />
-        </GoogleOAuthProvider>
-      </GoogleUserContext.Provider>
-    </React.StrictMode>
-  )
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.setGoogleUserId = (id) => {
+      this.setState(state => ({
+        googleUserId: id
+      }));
+    };
+
+    // State also contains the updater function so it will
+    // be passed down into the context provider
+    this.state = {
+      googleUserId: "DEFAULT_GOOGLE_USER_ID",
+      setGoogleUserId: this.setGoogleUserId,
+    };
+  }
+
+  render () {
+    return ( 
+      <React.StrictMode>
+        <GoogleUserContext.Provider value={this.state}>
+          <GoogleOAuthProvider clientId={googleClientId}>
+            <RouterProvider router={router} />
+          </GoogleOAuthProvider>
+        </GoogleUserContext.Provider>
+      </React.StrictMode>
+    )
+  }
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root')).render(
   <App />
-);
+)
