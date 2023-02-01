@@ -6,8 +6,6 @@ This is a basic app built for the purpose of giving a simple sandbox react app w
 - [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google)
 - [react-router](https://github.com/remix-run/react-router)
 
-This is 
-
 ## Prerequisites
 
 1. Install [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
