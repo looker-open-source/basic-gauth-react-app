@@ -1,7 +1,7 @@
 {
   "name": "basic-gauth-react-app",
   "version": "0.1.0",
-  "proxy": "http://embed.demo.com:5000/",
+  "proxy": "http://embed.demo.com:5000",
   "private": true,
   "dependencies": {
     "@react-oauth/google": "^0.6.1",

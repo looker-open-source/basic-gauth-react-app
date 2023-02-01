@@ -5,21 +5,27 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import './index.css';
-import { GoogleOAuthProvider, GoogleLogin, googleLogout } from '@react-oauth/google';
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 const GoogleUserContext = React.createContext();
 
 function Welcome(props) {
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const userInfo = await fetch(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        { headers: { Authorization: 'Bearer ' + tokenResponse.access_token } },
+      );
+      const response = await userInfo.json()
+      console.log(response);
+    },
+    onError: errorResponse => console.log(errorResponse),
+  });
   return (
-    <GoogleLogin
-      onSuccess={credentialResponse => {
-        console.log(credentialResponse);
-      }}
-      onError={() => {
-        console.log('Login Failed');
-      }}
-    />
-  );
+    <button onClick={() => login()}>
+      Sign in with Google 🚀{' '}
+    </button>
+  )
 }
 
 function Home(props) {
@@ -45,7 +51,7 @@ const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleuse
 
 const root = ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GoogleUserContext.Provider value="Reed">
+    <GoogleUserContext.Provider value="abcde12345">
       <GoogleOAuthProvider clientId={googleClientId}>
         <RouterProvider router={router} />
       </GoogleOAuthProvider>
